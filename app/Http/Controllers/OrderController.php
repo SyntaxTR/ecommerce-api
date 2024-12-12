@@ -49,7 +49,7 @@ class OrderController extends Controller
             'status' => 'pending',
         ]);
 
-        // Sepeti kapat
+        // Close cart
         $cart->update(['status' => 'completed']);
 
         return response()->json([
