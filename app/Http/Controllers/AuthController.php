@@ -10,7 +10,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    // Kullanıcı kaydı (Register)
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -41,7 +40,6 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        // Kimlik doğrulama
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
