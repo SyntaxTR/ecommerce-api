@@ -16,8 +16,8 @@ use App\Http\Controllers\OrderController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
-Route::middleware(['auth:api', 'log.request.response'])->group(function () {
+                                                        /* max 60 request in 10 sec*/
+Route::middleware(['auth:api', 'log.request.response', 'throttle:60,10'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
