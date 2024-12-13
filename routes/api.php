@@ -8,20 +8,18 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
+                                        /* max 3 request in 10 sec*/
+Route::middleware(['log.request.response', 'throttle:3,10'])->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
-/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
-
-
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
                                                         /* max 60 request in 10 sec*/
 Route::middleware(['auth:api', 'log.request.response', 'throttle:60,10'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::get('/products', [ProductController::class, 'index']);
+                                                                                    /* 60 second to cache */
+    Route::get('/products', [ProductController::class, 'index'])->middleware('cache:60, products_cache');
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);

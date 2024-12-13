@@ -72,14 +72,13 @@ class CartController extends Controller
         }
 
         $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $product = Product::find($validated['product_id']);
+        $product = Product::find($cartItem->product_id);
 
         /* Stock control */
-        if ($product->stock < $validated['quantity']) {
+        if (!$product || $product->stock < $validated['quantity']) {
             return response()->json(['message' => 'No stock'], 400);
         }
 

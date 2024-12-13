@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
         'log.request.response' => \App\Http\Middleware\LogRequestResponse::class,
+        'cache' => \App\Http\Middleware\CacheResponse::class,
     ];
 }
