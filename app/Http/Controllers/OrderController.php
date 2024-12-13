@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\User;
 class OrderController extends Controller
 {
+
     public function store(Request $request)
     {
         $user = $request->user();
@@ -73,14 +75,27 @@ class OrderController extends Controller
 
         $order = Order::find($id);
 
+
         if (!$order) {
             return response()->json(['message' => 'Order Not found.'], 404);
         }
 
+        $user = User::find(auth()->id());
+
         // Only creater user or admin user can update status
-        if ($order->user_id !== $request->user()->id && !$request->user()->isAdmin()) {
+        if ($order->user_id !== $request->user()->id && $user->is_admin == "F") {
             return response()->json(['message' => 'You cant change the order status.'], 403);
         }
+
+        if($order->user_id == $request->user()->id && $user->is_admin == "F" && $request->status !== "cancelled"){
+
+            if($order->status !== "pending"){
+                return response()->json(['message' => "You cannot change the order status because order is $order->status."], 403);
+            }else if($request->status !== "cancelled"){
+                return response()->json(['message' => 'You can only cancel the order.'], 403);
+            }
+        }
+
 
         // Update Status
         $order->update(['status' => $request->status]);

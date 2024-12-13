@@ -63,4 +63,5 @@ class User extends Authenticatable implements JWTSubject // Arayüzü implement 
     {
         return $this->hasMany(Order::class);
     }
+
 }

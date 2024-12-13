@@ -11,6 +11,7 @@ class CartController extends Controller
 {
     public function index()
     {
+                                                                                    /* N+1 ??*/
         $cart = Cart::where('user_id', auth()->id())->where('status', 'active')->with('items.product')->first();
 
         if (!$cart) {
