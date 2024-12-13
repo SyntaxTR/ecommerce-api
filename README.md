@@ -1,64 +1,273 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# E-Commerce API with Cart Management System
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project is a RESTful API built with Laravel for an e-commerce platform, featuring cart management and order processing capabilities.
 
-## About Laravel
+## Getting Started
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. Clone the repository from GitHub:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+   ```bash
+   git clone https://github.com/SyntaxTR/ecommerce-api.git
+   ```
 
-## Learning Laravel
+2. Navigate to the project directory:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+   ```bash
+   cd ecommerce-api
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. Install project dependencies:
 
-## Laravel Sponsors
+   ```bash
+   composer install
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+4. Update the dependencies:
 
-### Premium Partners
+   ```bash
+   composer update
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+5. Copy the `.env` file and configure the database connection:
 
-## Contributing
+   ```bash
+   copy .env.example .env
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   Edit the `.env` file to include your database credentials.
 
-## Code of Conduct
+6. Run database migrations:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   php artisan migrate
+   ```
 
-## Security Vulnerabilities
+7. Generate the JWT secret key:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   ```bash
+   php artisan jwt:secret
+   ```
 
-## License
+8. Start the development server:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+   ```bash
+   php artisan serve
+   ```
+
+Your API is now ready to use.
+
+## Database Schema
+
+| Table        | Columns                                                                 |
+|--------------|------------------------------------------------------------------------|
+| `products`   | id (PK), name (string), price (decimal), stock (integer), created_at (timestamp), updated_at (timestamp) |
+| `carts`      | id (PK), user_id (FK), status (string), created_at (timestamp), updated_at (timestamp) |
+| `cart_items` | id (PK), cart_id (FK), product_id (FK), quantity (integer), price (decimal), created_at (timestamp), updated_at (timestamp) |
+| `orders`     | id (PK), user_id (FK), total_amount (decimal), status (string), created_at (timestamp), updated_at (timestamp) |
+| `users`      | id (PK), name (string), email (string), email_verified_at (timestamp), password (string), is_admin (enum), remember_token (string), created_at (timestamp), updated_at (timestamp) |
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint             | Description               |
+|--------|-----------------------|---------------------------|
+| POST   | `/api/auth/register` | Register a new user       |
+| POST   | `/api/auth/login`    | Login and obtain a token  |
+| POST   | `/api/auth/logout`   | Logout and invalidate token |
+
+### Product Management
+
+| Method | Endpoint                  | Description                     |
+|--------|----------------------------|---------------------------------|
+| GET    | `/api/products`           | List all products              |
+| GET    | `/api/products/{id}`      | Get product details            |
+| POST   | `/api/products`           | Create a new product (Admin only) |
+| PUT    | `/api/products/{id}`      | Update a product (Admin only)  |
+| DELETE | `/api/products/{id}`      | Delete a product (Admin only)  |
+
+### Cart Management
+
+| Method | Endpoint                  | Description                     |
+|--------|----------------------------|---------------------------------|
+| GET    | `/api/cart`               | View the current cart          |
+| POST   | `/api/cart/items`         | Add an item to the cart        |
+| PUT    | `/api/cart/items/{id}`    | Update an item in the cart     |
+| DELETE | `/api/cart/items/{id}`    | Remove an item from the cart   |
+
+### Order Management
+
+| Method | Endpoint                  | Description                     |
+|--------|----------------------------|---------------------------------|
+| POST   | `/api/orders`             | Place a new order               |
+| GET    | `/api/orders`             | List all orders                 |
+| GET    | `/api/orders/{id}`        | Get details of a specific order |
+| PUT    | `/api/orders/{id}/status` | Change the order status         |
+
+## API Endpoint Examples
+
+### Authentication
+
+**Register a new user:**
+```bash
+curl --location --request POST 'http://127.0.0.1:8000/api/auth/register' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "Name" : "Your Name",
+    "email" : "email@email.com",
+    "password" : "password",
+    "password_confirmation" : "password"
+}'
+```
+
+**Login:**
+```bash
+curl --location --request POST 'http://127.0.0.1:8000/api/auth/login' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email" : "email",
+    "password" : "password"
+}'
+```
+
+**Logout:**
+```bash
+curl --location --request POST 'http://127.0.0.1:8000/api/auth/logout' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+### Product Management
+
+**List all products:**
+```bash
+curl --location --request GET 'http://127.0.0.1:8000/api/products/' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+**Get product details:**
+```bash
+curl --location --request GET 'http://127.0.0.1:8000/api/products/{id}' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+**Create a new product:**
+```bash
+curl --location --request POST 'http://127.0.0.1:8000/api/products' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Apple",
+    "price": 15,
+    "stock": 50
+}'
+```
+
+**Update a product:**
+```bash
+curl --location --request PUT 'http://127.0.0.1:8000/api/products/{id}' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Apple",
+    "price": 15,
+    "stock": 50
+}'
+```
+
+**Delete a product:**
+```bash
+curl --location --request DELETE 'http://127.0.0.1:8000/api/products/{id}' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+### Cart Management
+
+**View the current cart:**
+```bash
+curl --location --request GET 'http://127.0.0.1:8000/api/cart' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+**Add an item to the cart:**
+```bash
+curl --location --request POST 'http://127.0.0.1:8000/api/cart/items' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data '{
+    "product_id": "1",
+    "quantity": 10
+}'
+```
+
+**Update an item in the cart:**
+```bash
+curl --location --request PUT 'http://127.0.0.1:8000/api/cart/items/{id}' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data '{
+    "quantity": 10
+}'
+```
+
+**Remove an item from the cart:**
+```bash
+curl --location --request DELETE 'http://127.0.0.1:8000/api/cart/items/{id}' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+### Order Management
+
+**Place a new order:**
+```bash
+curl --location --request POST 'http://127.0.0.1:8000/api/orders' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+**List all orders:**
+```bash
+curl --location --request GET 'http://127.0.0.1:8000/api/orders' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+**Get order details:**
+```bash
+curl --location --request GET 'http://127.0.0.1:8000/api/orders/{id}' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json'
+```
+
+**Change order status:**
+```bash
+curl --location --request PUT 'http://127.0.0.1:8000/api/orders/{id}/status' \
+--header 'Authorization: Bearer {jwt_token}' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--data '{
+    "status": "shipped"
+}'
+```

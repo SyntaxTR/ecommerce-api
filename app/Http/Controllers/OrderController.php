@@ -60,11 +60,11 @@ class OrderController extends Controller
         ], 201);
     }
     public function index(Request $request) {
-        return $request->user()->orders;
+        return $request->user()->orders ?: response()->json(['message' => 'Order not found.'], 404);
     }
 
     public function show(Request $request, $id) {
-        return $request->user()->orders()->find($id);
+        return $request->user()->orders()->find($id) ?: response()->json(['message' => 'Order not found.'], 404);
     }
 
     public function updateStatus(Request $request, $id)
