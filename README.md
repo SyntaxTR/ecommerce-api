@@ -1,6 +1,23 @@
 # E-Commerce API with Cart Management System
 
 This project is a RESTful API built with Laravel for an e-commerce platform, featuring cart management and order processing capabilities.
+## Key Features
+
+- **PHP**: The backend is developed with PHP, leveraging its powerful features for web application development.
+- **Laravel**: A modern PHP framework used for rapid application development, offering clean routing, middleware, and many built-in features.
+- **MySQL**: A relational database management system (RDBMS) used to store and manage application data efficiently.
+- **Request/Response Logging**: All incoming requests and outgoing responses are logged for monitoring and debugging purposes. This includes details like request parameters, response status, and timestamps.
+- **Caching**: Implemented caching mechanisms to improve performance and reduce redundant database queries.
+- **JWT Authentication**: Secure and stateless authentication via JSON Web Tokens (JWT). Ensures only authorized users can access protected routes and resources.
+
+## Technologies Used
+
+- **PHP 8.x**
+- **Laravel 10.x**
+- **MySQL**
+- **JWT (JSON Web Tokens)**
+- **Cache**
+- **Request/Response Logging** (via middleware)
 
 ## Getting Started
 
